@@ -1,19 +1,18 @@
 <?php
 require 'config.php';
-header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Methods: POST");
 
 // Get form
 $email = $_POST['email'];
 $password = $_POST['password'];
-
 $stmt = $pdo->prepare("SELECT * FROM groupeArcadia WHERE email = ?");
 $stmt->execute([$email]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
 if ($user && password_verify($password, $user['password'])) {
     echo json_encode([
         'success' => true,
-        'username' => $user['username'],
         'role' => $user['role']
     ]);
 } else {
@@ -22,4 +21,3 @@ if ($user && password_verify($password, $user['password'])) {
         'message' => 'Identifiants invalides.'
     ]);
 }
-?>
